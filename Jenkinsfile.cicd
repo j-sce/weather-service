@@ -21,16 +21,17 @@ pipeline {
 
     stage('Unit Tests') {
       steps {
-        sh './gradlew clean test --tests com.weather_service.testsuites.UnitTests'
+        sh './gradlew clean test --tests com.weather_service.testsuites.UnitSuite'
       }
       post {
         always {
           junit 'build/test-results/test/*.xml'
         }
-      }
-      failure {
-        echo 'Unit tests failed. Check the test report for details.'
+        failure {
+          echo '❌ Unit tests failed. Check the test report for details.'
+        }
       }
     }
+
   }
 }
