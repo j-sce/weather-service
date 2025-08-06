@@ -91,6 +91,28 @@ pipeline {
       }
     }
 
+    stage('Push Docker Image to ECR') {
+      steps {
+        withCredentials([
+          string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
+          string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
+        ]) {
+          sh '''
+            set -e
+            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
+            echo "🔐 Logging into ECR..."
+            aws ecr get-login-password --region ${AWS_REGION} | \
+              docker login --username AWS --password-stdin ${ECR_REGISTRY}
+
+            echo "📦 Pushing Docker image to ECR: ${ECR_IMAGE_URL}..."
+            docker push ${ECR_IMAGE_URL}
+          '''
+        }
+      }
+    }
+
 
   }
 }
