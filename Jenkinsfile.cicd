@@ -21,6 +21,7 @@ pipeline {
 
     stage('Unit Tests') {
       steps {
+        sh 'chmod +x gradlew'
         sh './gradlew clean test --tests com.weather_service.testsuites.UnitSuite'
       }
       post {
