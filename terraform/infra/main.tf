@@ -45,7 +45,7 @@ resource "aws_instance" "weather_ec2" {
   subnet_id                   = data.aws_subnets.default.ids[0]
   associate_public_ip_address = true
   iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
-  user_data                   = templatefile("${path.module}/scripts/user_data.sh", {
+  user_data                   = templatefile("user_data.sh", {
     region     = var.aws_region
     account_id = var.account_id
     image_tag  = var.image_tag
