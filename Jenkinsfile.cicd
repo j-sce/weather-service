@@ -34,5 +34,20 @@ pipeline {
       }
     }
 
+    stage('Build Docker Image') {
+      steps {
+        script {
+          try {
+            sh 'docker version'
+            sh "docker build -t ${ECR_IMAGE_URL} ."
+          } catch (err) {
+            echo '❌ Docker build failed.'
+            echo "Error: ${err.getMessage()}"
+            error("Stopping pipeline due to Docker build failure.")
+          }
+        }
+      }
+    }
+
   }
 }
