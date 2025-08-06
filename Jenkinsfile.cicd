@@ -7,6 +7,7 @@ pipeline {
     ECR_REPO       = 'weather-service'
     ECR_REGISTRY   = '061039805700.dkr.ecr.us-east-1.amazonaws.com'
     ECR_IMAGE_URL  = "${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
+    ACCOUNT_ID     = '061039805700'
 
     TF_ECR_SSM_DIR = 'terraform/ecr_ssm'
     TF_INFRA_DIR   = 'terraform/infra'
@@ -113,6 +114,32 @@ pipeline {
       }
     }
 
+    stage('Provision EC2 Infra') {
+      steps {
+        dir("${TF_INFRA_DIR}") {
+          withCredentials([
+            string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
+            string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
+          ]) {
+            sh """
+              set -e
+              terraform init -input=false
+              terraform validate
+              terraform apply -auto-approve \
+                -var='aws_region=${AWS_REGION}' \
+                -var='account_id=${ACCOUNT_ID}' \
+                -var='image_tag=${IMAGE_TAG}' \
+                -var='instance_type=t2.micro'
+            """
+          }
+        }
+      }
+      post {
+        failure {
+          echo "🚨 EC2 Infra provisioning failed. Check Terraform output."
+        }
+      }
+    }
 
   }
 }
