@@ -2,14 +2,9 @@ pipeline {
   agent any
 
   environment {
-    AWS_REGION     = 'us-east-1'
-    IMAGE_TAG      = "${env.BUILD_NUMBER}"
-    ECR_REPO       = 'weather-service'
-    ECR_REGISTRY   = '061039805700.dkr.ecr.us-east-1.amazonaws.com'
-    ECR_IMAGE_URL  = "${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
-
     TF_ECR_SSM_DIR = 'terraform/ecr_ssm'
-    TF_INFRA_DIR   = 'terraform/infra'
+    AWS_REGION     = 'us-east-1'
+    ECR_REPO       = 'weather-service'
   }
 
   stages {
@@ -19,37 +14,7 @@ pipeline {
       }
     }
 
-    stage('Unit Tests') {
-      steps {
-        sh 'chmod +x gradlew'
-        sh './gradlew clean test --tests com.weather_service.testsuites.UnitSuite'
-      }
-      post {
-        always {
-          junit 'build/test-results/test/*.xml'
-        }
-        failure {
-          echo '❌ Unit tests failed. Check the test report for details.'
-        }
-      }
-    }
-
-    stage('Build Docker Image') {
-      steps {
-        script {
-          try {
-            sh 'docker version'
-            sh "docker build -t ${ECR_IMAGE_URL} ."
-          } catch (err) {
-            echo '❌ Docker build failed.'
-            echo "Error: ${err.getMessage()}"
-            error("Stopping pipeline due to Docker build failure.")
-          }
-        }
-      }
-    }
-
-    stage('Provision ECR + SSM') {
+    stage('Destroy ECR + SSM') {
       steps {
         dir("${TF_ECR_SSM_DIR}") {
           withCredentials([
@@ -63,7 +28,6 @@ pipeline {
             string(credentialsId: 'owm-api-url', variable: 'OWM_URL')
           ]) {
             script {
-              // Write parameters to a temporary tfvars JSON file for safety
               def tfvarsFile = 'ssm-vars.auto.tfvars.json'
               writeFile file: tfvarsFile, text: """
               {
@@ -80,17 +44,23 @@ pipeline {
               }
               """.stripIndent()
 
-              // Run Terraform
               sh """
                 terraform init -input=false
-                terraform apply -auto-approve
+                terraform destroy -auto-approve
               """
             }
           }
         }
       }
     }
+  }
 
-
+  post {
+    success {
+      echo '✅ ECR and SSM parameters successfully destroyed.'
+    }
+    failure {
+      echo '❌ Failed to destroy ECR or SSM resources.'
+    }
   }
 }
