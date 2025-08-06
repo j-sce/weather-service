@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: weather-service
+  config:
+    import: aws-parameterstore:/dev/weather/
+  cloud:
+    aws:
+      parameterstore:
+        enabled: true
+        region: us-east-1
+  cache:
+    type: redis
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+
+weather:
+  cache:
+    ttl: 5        # store cache (minutes)
+    distance: 1.0 # radius for geospatial queries (km)
+
+server:
+  port: 9090

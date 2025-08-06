@@ -1,0 +1,36 @@
+pipeline {
+  agent any
+
+  environment {
+    AWS_REGION     = 'us-east-1'
+    IMAGE_TAG      = "${env.BUILD_NUMBER}"
+    ECR_REPO       = 'weather-service'
+    ECR_REGISTRY   = '061039805700.dkr.ecr.us-east-1.amazonaws.com'
+    ECR_IMAGE_URL  = "${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
+
+    TF_ECR_SSM_DIR = 'terraform/ecr_ssm'
+    TF_INFRA_DIR   = 'terraform/infra'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Unit Tests') {
+      steps {
+        sh './gradlew clean test --tests com.weather_service.testsuites.UnitTests'
+      }
+      post {
+        always {
+          junit 'build/test-results/test/*.xml'
+        }
+      }
+      failure {
+        echo 'Unit tests failed. Check the test report for details.'
+      }
+    }
+  }
+}
