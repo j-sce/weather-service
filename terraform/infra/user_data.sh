@@ -4,16 +4,11 @@ set -e
 
 # Update package list and install prerequisites
 apt-get update -y
-apt-get install -y docker.io python3-pip curl jq
+apt-get install -y docker.io unzip curl jq
 
-# Install awscli with pip and link it
-python3 -m pip install --upgrade --user awscli
-
-# Export PATH to include pip bin (only for this script execution)
-export PATH=$PATH:/root/.local/bin
-
-# Optionally, symlink it globally
-ln -s /root/.local/bin/aws /usr/local/bin/aws
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
 
 # Enable Docker service
 systemctl enable docker
