@@ -24,13 +24,13 @@ AWS_SESSION_TOKEN=$(echo "$CREDS" | jq -r .Token)
 
 export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 
-REGION="${region}"
-ACCOUNT_ID="${account_id}"
-TAG="${image_tag}"
-REPO="weather-service"
+region="${region}"
+account_id="${account_id}"
+image_tag="${image_tag}"
+repo="weather-service"
 
 echo "[INFO] Logging in to ECR..."
-aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.$REGION.amazonaws.com
+aws ecr get-login-password --region $region | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.$region.amazonaws.com
 
 echo "[INFO] Writing docker-compose.yml..."
 cat > /home/ubuntu/docker-compose.yml <<EOF
@@ -43,7 +43,7 @@ services:
       - weather-net
 
   app:
-    image: ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REPO}:${TAG}
+    image: ${account_id}.dkr.ecr.${region}.amazonaws.com/${repo}:${image_tag}
     container_name: app
     ports:
       - "9090:9090"
