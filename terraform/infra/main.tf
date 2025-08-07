@@ -4,17 +4,17 @@ data "aws_vpc" "default" {
 
 data "aws_subnets" "default" {
   filter {
-    name   = "vpc-id"
+    name = "vpc-id"
     values = [data.aws_vpc.default.id]
   }
 }
 
 data "aws_ami" "ubuntu" {
   most_recent = true
-  owners      = ["099720109477"] # Canonical
+  owners = ["099720109477"] # Canonical
 
   filter {
-    name   = "name"
+    name = "name"
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
 }
@@ -24,13 +24,15 @@ resource "aws_iam_role" "ec2_role" {
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Principal = {
-        Service = "ec2.amazonaws.com"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
       }
-      Action = "sts:AssumeRole"
-    }]
+    ]
   })
 }
 
@@ -45,11 +47,11 @@ resource "aws_instance" "weather_ec2" {
   subnet_id                   = data.aws_subnets.default.ids[0]
   associate_public_ip_address = true
   iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
-  user_data                   = templatefile("${path.module}/user_data.sh", {
+  user_data = templatefile("${path.module}/user_data.sh", {
     region     = var.aws_region
     account_id = var.account_id
     image_tag  = var.image_tag
-    repo = var.ecr_repo_name
+    repo       = var.ecr_repo_name
   })
 
   tags = {
@@ -65,23 +67,23 @@ resource "aws_security_group" "weather_sg" {
   vpc_id      = data.aws_vpc.default.id
 
   ingress {
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
+    from_port = 9090
+    to_port   = 9090
+    protocol  = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port   = 6379
-    to_port     = 6379
-    protocol    = "tcp"
+    from_port = 6379
+    to_port   = 6379
+    protocol  = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }

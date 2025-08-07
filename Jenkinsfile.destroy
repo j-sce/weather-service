@@ -17,6 +17,28 @@ pipeline {
       }
     }
 
+    stage('Destroy EC2 Infra') {
+      steps {
+        dir("${TF_INFRA_DIR}") {
+          withCredentials([
+            string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
+            string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
+          ]) {
+            sh """
+              echo '🔨 Destroying EC2 infrastructure...'
+              set -e
+              terraform init -input=false
+              terraform destroy -auto-approve \
+                -var='aws_region=${AWS_REGION}' \
+                -var='account_id=${ACCOUNT_ID}' \
+                -var='image_tag=unused' \
+                -var='instance_type=t2.micro'
+            """
+          }
+        }
+      }
+    }
+
     stage('Destroy ECR + SSM') {
       steps {
         dir("${TF_ECR_SSM_DIR}") {
@@ -48,6 +70,7 @@ pipeline {
               """.stripIndent()
 
               sh """
+                echo '🧨 Destroying ECR + SSM resources...'
                 terraform init -input=false
                 terraform destroy -auto-approve
               """
