@@ -6,9 +6,11 @@ set -e
 apt-get update -y
 apt-get install -y docker.io unzip curl jq
 
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+apt install -y unzip
+unzip /tmp/awscliv2.zip -d /tmp
+/tmp/aws/install
+export PATH=$PATH:/usr/local/bin
 
 # Enable Docker service
 systemctl enable docker
