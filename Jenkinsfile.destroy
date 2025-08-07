@@ -17,35 +17,6 @@ pipeline {
       }
     }
 
-    stage('Destroy EC2 Infrastructure') {
-      steps {
-        dir("${TF_INFRA_DIR}") {
-          withCredentials([
-            string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
-            string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
-          ]) {
-            sh """
-              set -e
-              terraform init -input=false
-              terraform destroy -auto-approve \
-                -var='aws_region=${AWS_REGION}' \
-                -var='account_id=${ACCOUNT_ID}' \
-                -var='image_tag=${IMAGE_TAG}' \
-                -var='instance_type=t2.micro'
-            """
-          }
-        }
-      }
-      post {
-        failure {
-          echo "❌ Failed to destroy EC2 infra"
-        }
-        success {
-          echo "✅ EC2 infra destroyed"
-        }
-      }
-    }
-
     stage('Destroy ECR + SSM') {
       steps {
         dir("${TF_ECR_SSM_DIR}") {
