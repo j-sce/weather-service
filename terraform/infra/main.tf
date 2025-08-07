@@ -49,6 +49,7 @@ resource "aws_instance" "weather_ec2" {
     region     = var.aws_region
     account_id = var.account_id
     image_tag  = var.image_tag
+    repo = var.ecr_repo_name
   })
 
   tags = {

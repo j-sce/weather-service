@@ -14,3 +14,8 @@ variable "instance_type" {
   type    = string
   default = "t2.micro"
 }
+
+variable "ecr_repo_name" {
+  type = string
+  default = "weather-service"
+}

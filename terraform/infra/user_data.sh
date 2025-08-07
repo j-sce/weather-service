@@ -27,13 +27,13 @@ export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 region="${region}"
 account_id="${account_id}"
 image_tag="${image_tag}"
-repo="weather-service"
+repo="${repo}"
 
 echo "[INFO] Logging in to ECR..."
 aws ecr get-login-password --region $region | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.$region.amazonaws.com
 
 echo "[INFO] Writing docker-compose.yml..."
-cat > /home/ubuntu/docker-compose.yml <<EOF
+cat > /home/ubuntu/docker-compose.yml <<'EOF'
 services:
   redis:
     image: redis:latest
