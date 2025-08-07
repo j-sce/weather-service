@@ -9,13 +9,18 @@ data "aws_subnets" "default" {
   }
 }
 
-data "aws_ami" "ubuntu" {
+data "aws_ami" "amazon_linux_2023" {
   most_recent = true
-  owners = ["099720109477"] # Canonical
+  owners      = ["amazon"]
 
   filter {
-    name = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    name   = "name"
+    values = ["amazon-linux-2023-*-x86_64-kernel-6.1*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
   }
 }
 
@@ -42,7 +47,7 @@ resource "aws_iam_role_policy_attachment" "admin" {
 }
 
 resource "aws_instance" "weather_ec2" {
-  ami                         = data.aws_ami.ubuntu.id
+  ami                         = data.aws_ami.amazon_linux_2023.id
   instance_type               = var.instance_type
   subnet_id                   = data.aws_subnets.default.ids[0]
   associate_public_ip_address = true

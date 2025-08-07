@@ -2,17 +2,11 @@
 
 set -e
 
-# Update package list and install prerequisites
-apt-get update -y
-apt-get install -y docker.io unzip curl jq
+echo "[INFO] Installing Docker and Docker Compose..."
+dnf update -y
+dnf install -y docker jq curl
 
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
-apt install -y unzip
-unzip /tmp/awscliv2.zip -d /tmp
-/tmp/aws/install
-export PATH=$PATH:/usr/local/bin
-
-# Enable Docker service
+echo "[INFO] Starting Docker..."
 systemctl enable docker
 systemctl start docker
 
@@ -35,11 +29,14 @@ account_id="${account_id}"
 image_tag="${image_tag}"
 repo="${repo}"
 
+echo "[INFO] Installing AWS CLI..."
+dnf install -y awscli
+
 echo "[INFO] Logging in to ECR..."
 aws ecr get-login-password --region $region | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.$region.amazonaws.com
 
 echo "[INFO] Writing docker-compose.yml..."
-cat > /home/ubuntu/docker-compose.yml <<'EOF'
+cat > /home/ec2-user/docker-compose.yml <<EOF
 services:
   redis:
     image: redis:latest
@@ -65,7 +62,7 @@ networks:
 EOF
 
 echo "[INFO] Running docker-compose up -d..."
-cd /home/ubuntu
+cd /home/ec2-user
 docker compose up -d
 
 echo "[INFO] Deployment completed."
