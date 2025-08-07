@@ -2,20 +2,41 @@
 
 set -e
 
-echo "[INFO] Installing Docker and Docker Compose..."
-apt-get update -y
-apt-get install -y docker.io curl jq
+# Update package list and install prerequisites
+apt-get update
+apt-get install -y \
+    curl \
+    unzip \
+    awscli \
+    docker.io \
+    jq
 
-echo "[INFO] Installing AWS CLI..."
-cd /tmp
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-./aws/install
-export PATH=$PATH:/usr/local/bin
-
-echo "[INFO] Starting Docker..."
+# Enable Docker service
 systemctl enable docker
 systemctl start docker
+
+# Authenticate with ECR
+REGION="us-east-1"  # change as needed
+ACCOUNT_ID="123456789012"  # change to your AWS account ID
+REPO_URL="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+
+# Authenticate to ECR (non-interactive)
+#aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REPO_URL
+
+#echo "[INFO] Installing Docker and Docker Compose..."
+#apt-get update -y
+#apt-get install -y docker.io curl jq
+
+#echo "[INFO] Installing AWS CLI..."
+#cd /tmp
+#curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+#unzip awscliv2.zip
+#./aws/install
+#export PATH=$PATH:/usr/local/bin
+#
+#echo "[INFO] Starting Docker..."
+#systemctl enable docker
+#systemctl start docker
 
 echo "[INFO] Authenticating with ECR..."
 TOKEN=$(curl -X PUT http://169.254.169.254/latest/api/token \
