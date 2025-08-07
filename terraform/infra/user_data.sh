@@ -16,11 +16,11 @@ TOKEN=$(curl -X PUT http://169.254.169.254/latest/api/token \
 ROLE_NAME=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" \
     http://169.254.169.254/latest/meta-data/iam/security-credentials/)
 CREDS=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" \
-    http://169.254.169.254/latest/meta-data/iam/security-credentials/\${ROLE_NAME})
+    http://169.254.169.254/latest/meta-data/iam/security-credentials/$ROLE_NAME)
 
-AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r .AccessKeyId)
-AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r .SecretAccessKey)
-AWS_SESSION_TOKEN=$(echo $CREDS | jq -r .Token)
+AWS_ACCESS_KEY_ID=$(echo "$CREDS" | jq -r .AccessKeyId)
+AWS_SECRET_ACCESS_KEY=$(echo "$CREDS" | jq -r .SecretAccessKey)
+AWS_SESSION_TOKEN=$(echo "$CREDS" | jq -r .Token)
 
 export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 
