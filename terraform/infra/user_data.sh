@@ -15,10 +15,11 @@ echo "[INFO] Installing Docker Compose standalone"
 #curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 \
 #  -o /usr/libexec/docker/cli-plugins/docker-compose
 #chmod +x /usr/libexec/docker/cli-plugins/docker-compose
-curl -SL https://github.com/docker/compose/releases/download/v2.39.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+#docker-compose version
 
-echo "[INFO] Verifying Docker Compose plugin..."
+echo "[INFO] Verifying Docker Compose..."
 docker-compose version || echo "❌ Docker Compose plugin not found"
 
 echo "[INFO] Authenticating with ECR..."
