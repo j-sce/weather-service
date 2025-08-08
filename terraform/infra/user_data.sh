@@ -2,7 +2,7 @@
 
 set -e
 
-echo "[INFO] Installing Docker and Docker Compose..."
+echo "[INFO] Installing Docker "
 dnf update -y
 dnf install -y docker jq
 
@@ -11,10 +11,10 @@ systemctl enable docker
 systemctl start docker
 
 echo "[INFO] Installing Docker Compose Plugin (v2)..."
-mkdir -p ~/.docker/cli-plugins/
-curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 \
-  -o ~/.docker/cli-plugins/docker-compose
-chmod +x ~/.docker/cli-plugins/docker-compose
+mkdir -p /usr/libexec/docker/cli-plugins
+curl -SL https://github.com/docker/compose/releases/download/v2.39.1/docker-compose-linux-x86_64 \
+  -o /usr/libexec/docker/cli-plugins/docker-compose
+chmod +x /usr/libexec/docker/cli-plugins/docker-compose
 
 # Optional: verify
 docker compose version
