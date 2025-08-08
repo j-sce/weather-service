@@ -10,14 +10,11 @@ echo "[INFO] Starting Docker..."
 systemctl enable docker
 systemctl start docker
 
-echo "[INFO] Installing Docker Compose standalone"
-#mkdir -p /usr/libexec/docker/cli-plugins/
-#curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 \
-#  -o /usr/libexec/docker/cli-plugins/docker-compose
-#chmod +x /usr/libexec/docker/cli-plugins/docker-compose
-sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) -o /usr/libexec/docker/cli-plugins/docker-compose
-sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
-#docker-compose version
+echo "[INFO] Installing Docker Compose plugin"
+mkdir -p ~/.docker/cli-plugins
+curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) \
+  -o ~/.docker/cli-plugins/docker-compose
+chmod +x ~/.docker/cli-plugins/docker-compose
 
 echo "[INFO] Verifying Docker Compose..."
 docker compose version || echo "❌ Docker Compose plugin not found"
