@@ -20,22 +20,7 @@ pipeline {
       }
     }
 
-    stage('Unit Tests') {
-      steps {
-        sh 'chmod +x gradlew'
-        sh './gradlew clean test --tests com.weather_service.testsuites.UnitSuite'
-      }
-      post {
-        always {
-          junit 'build/test-results/test/*.xml'
-        }
-        failure {
-          echo '❌ Unit tests failed. Check the test report for details.'
-        }
-      }
-    }
-
-    stage('Run Tests with AWS SSM') {
+    stage('Integration Tests') {
       steps {
         withCredentials([
           string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),

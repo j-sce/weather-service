@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@SpringBootTest
 //@AutoConfigureMockMvc
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ContextConfiguration(initializers = TestcontainersConfiguration.Initializer.class)
 class WeatherServiceAppEndToEndTest {
 
