@@ -36,7 +36,7 @@ pipeline {
               terraform apply -auto-approve \
                 -var='aws_region=${AWS_REGION}' \
                 -var='account_id=${ACCOUNT_ID}' \
-                -var='image_tag=latest}' \
+                -var='image_tag=latest' \
                 -var='instance_type=t2.micro'
             """
           }
