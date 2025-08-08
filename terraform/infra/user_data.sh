@@ -4,7 +4,7 @@ set -e
 
 echo "[INFO] Installing Docker and Docker Compose..."
 dnf update -y
-dnf install -y docker jq curl
+dnf install -y docker jq
 
 echo "[INFO] Starting Docker..."
 systemctl enable docker
