@@ -99,10 +99,7 @@ class WeatherDataCachingIntegrationTest {
 
         when(weatherDataClient.getWeatherData(anyDouble(), anyDouble())).thenThrow(new BadRequestException("No weather data found."));
 
-        try {
-            weatherService.getWeatherData(lat, lon);
-        } catch (BadRequestException ignored) {
-        }
+        weatherService.getWeatherData(lat, lon);
 
         assertNull(Objects.requireNonNull(cacheManager.getCache("weather")).get("weather:" + lat + ":" + lon));
         verify(weatherDataClient, times(1)).getWeatherData(lat, lon);

@@ -87,7 +87,7 @@ class WeatherServiceTest {
     }
 
     @Test
-    void getWeatherData_NoCachedData_ReturnsWeatherDataFromExternalAPI() throws JsonProcessingException {
+    void getWeatherData_NoCachedData_ReturnsWeatherDataFromExternalAPI() {
         double lat = 40.0;
         double lon = 50.0;
         String jsonString = "{\"coord\":{\"lon\":50.0,\"lat\":40.0},\"weather\":[{\"id\":500,\"description\":\"light rain\"}],\"main\":{\"temp\":25.5,\"humidity\":80},\"wind\":{\"speed\":4.1},\"clouds\":{\"all\":90},\"sys\":{\"sunrise\":1605782400,\"sunset\":1605812400}}";
