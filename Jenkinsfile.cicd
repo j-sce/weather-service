@@ -118,27 +118,6 @@ pipeline {
       }
     }
 
-    stage('Integration Tests') {
-      steps {
-        withCredentials([
-          string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
-          string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
-        ]) {
-          sh '''
-            ./gradlew test --tests com.weather_service.testsuites.IntegrationSuite
-          '''
-        }
-      }
-      post {
-        always {
-          junit 'build/test-results/test/*.xml'
-        }
-        failure {
-          echo '❌ Integration tests failed. Check the report.'
-        }
-      }
-    }
-
     stage('Provision EC2 Infra') {
       steps {
         dir("${TF_INFRA_DIR}") {
@@ -162,6 +141,27 @@ pipeline {
       post {
         failure {
           echo "🚨 EC2 Infra provisioning failed. Check Terraform output."
+        }
+      }
+    }
+
+    stage('Integration Tests') {
+      steps {
+        withCredentials([
+          string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
+          string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
+        ]) {
+          sh '''
+            ./gradlew test --tests com.weather_service.testsuites.IntegrationSuite
+          '''
+        }
+      }
+      post {
+        always {
+          junit 'build/test-results/test/*.xml'
+        }
+        failure {
+          echo '❌ Integration tests failed. Check the report.'
         }
       }
     }
