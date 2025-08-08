@@ -38,9 +38,6 @@ account_id="${account_id}"
 image_tag="${image_tag}"
 repo="${repo}"
 
-#echo "[INFO] Installing AWS CLI..."
-#dnf install -y awscli
-
 echo "[INFO] Logging in to ECR..."
 aws ecr get-login-password --region $region | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.$region.amazonaws.com
 
