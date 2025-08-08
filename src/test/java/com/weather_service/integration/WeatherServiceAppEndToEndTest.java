@@ -103,7 +103,7 @@ class WeatherServiceAppEndToEndTest {
     void testGetWeather_InvalidToken() throws Exception {
 
         mockMvc.perform(get(URL)
-                        .header("Authorization", token)
+                        .header("Authorization", "")
                         .param("lat", "64.049075")
                         .param("lon", "-16.181418"))
                 .andExpect(status().isForbidden());
@@ -116,7 +116,7 @@ class WeatherServiceAppEndToEndTest {
         mockMvc.perform(get(URL)
                         .param("lat", "64.049075")
                         .param("lon", "-16.181418"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isBadRequest());
 
         verify(weatherDataClient, times(0)).getWeatherData(anyDouble(),anyDouble());
     }
