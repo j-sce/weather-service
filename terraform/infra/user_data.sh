@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+#set -e
 
 echo "[INFO] Installing Docker "
 dnf update -y
