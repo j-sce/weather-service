@@ -1,11 +1,8 @@
 package com.weather_service;
 
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.GenericContainer;
@@ -16,12 +13,6 @@ import org.testcontainers.utility.DockerImageName;
 @Configuration
 @ContextConfiguration(initializers = TestcontainersConfiguration.Initializer.class)
 public class TestcontainersConfiguration {
-
-//	@Bean
-//	@ServiceConnection(name = "redis")
-//	GenericContainer<?> redisContainer() {
-//		return new GenericContainer<>(DockerImageName.parse("redis:latest")).withExposedPorts(6379);
-//	}
 
     static final GenericContainer<?> redisContainer = new GenericContainer<>(DockerImageName.parse("redis:latest"))
             .withExposedPorts(6379);

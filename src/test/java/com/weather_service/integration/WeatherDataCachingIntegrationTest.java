@@ -30,13 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.*;
 
-//@ExtendWith(SpringExtension.class)
-//@Import({CacheConfig.class, WeatherService.class})
-//@EnableCaching
-//@ImportAutoConfiguration(classes = {
-//        CacheAutoConfiguration.class,
-//        RedisAutoConfiguration.class
-//})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(initializers = TestcontainersConfiguration.Initializer.class)
 @Import({CacheConfig.class, WeatherService.class})

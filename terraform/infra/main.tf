@@ -9,21 +9,6 @@ data "aws_subnets" "default" {
   }
 }
 
-# data "aws_ami" "amazon_linux_2023" {
-#   most_recent = true
-#   owners      = ["amazon"]
-#
-#   filter {
-#     name   = "name"
-#     values = ["amazon-linux-2023-*-x86_64-kernel-6.1*"]
-#   }
-#
-#   filter {
-#     name   = "architecture"
-#     values = ["x86_64"]
-#   }
-# }
-
 resource "aws_iam_role" "ec2_role" {
   name = "weather-ec2-role"
 
@@ -47,8 +32,7 @@ resource "aws_iam_role_policy_attachment" "admin" {
 }
 
 resource "aws_instance" "weather_ec2" {
-  # ami                         = data.aws_ami.amazon_linux_2023.id
-  ami = "ami-084a7d336e816906b"
+  ami                         = "ami-084a7d336e816906b"
   instance_type               = var.instance_type
   subnet_id                   = data.aws_subnets.default.ids[0]
   associate_public_ip_address = true

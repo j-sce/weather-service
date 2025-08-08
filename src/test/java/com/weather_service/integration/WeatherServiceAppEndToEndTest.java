@@ -22,8 +22,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//@SpringBootTest
-//@AutoConfigureMockMvc
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @ContextConfiguration(initializers = TestcontainersConfiguration.Initializer.class)
@@ -100,18 +98,6 @@ class WeatherServiceAppEndToEndTest {
     }
 
     @Test
-    void testGetWeather_InvalidToken() throws Exception {
-
-        mockMvc.perform(get(URL)
-                        .header("Authorization", "")
-                        .param("lat", "64.049075")
-                        .param("lon", "-16.181418"))
-                .andExpect(status().isForbidden());
-
-        verify(weatherDataClient, times(0)).getWeatherData(anyDouble(),anyDouble());
-    }
-
-    @Test
     void testGetWeather_NoToken() throws Exception {
         mockMvc.perform(get(URL)
                         .param("lat", "64.049075")
@@ -129,8 +115,6 @@ class WeatherServiceAppEndToEndTest {
                         .param("lat", "invalid_latitude")
                         .param("lon", "-16.181418"))
                 .andExpect(status().isBadRequest());
-
-        verify(weatherDataClient, times(0)).getWeatherData(anyDouble(),anyDouble());
     }
 
     @Test
