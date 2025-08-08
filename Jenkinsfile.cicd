@@ -27,7 +27,7 @@ pipeline {
           string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
         ]) {
           sh '''
-            echo "Testing with AWS credentials..."
+            chmod +x ./gradlew
             ./gradlew test --tests com.weather_service.testsuites.IntegrationSuite
           '''
         }
