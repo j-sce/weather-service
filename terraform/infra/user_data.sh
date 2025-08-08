@@ -15,7 +15,7 @@ systemctl start docker
 #curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 \
 #  -o /usr/libexec/docker/cli-plugins/docker-compose
 #chmod +x /usr/libexec/docker/cli-plugins/docker-compose
-#
+
 echo "[INFO] Verifying Docker Compose plugin..."
 docker compose version || echo "❌ Docker Compose plugin not found"
 
