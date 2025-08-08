@@ -107,8 +107,12 @@ pipeline {
             aws ecr get-login-password --region ${AWS_REGION} | \
               docker login --username AWS --password-stdin ${ECR_REGISTRY}
 
-            echo "📦 Pushing Docker image to ECR: ${ECR_IMAGE_URL}..."
+            echo "🏷️ Tagging Docker image with 'latest'..."
+            docker tag ${ECR_IMAGE_URL} ${ECR_REGISTRY}/${ECR_REPO}:latest
+
+            echo "📦 Pushing both image tags..."
             docker push ${ECR_IMAGE_URL}
+            docker push ${ECR_REGISTRY}/${ECR_REPO}:latest
           '''
         }
       }
@@ -128,7 +132,7 @@ pipeline {
               terraform apply -auto-approve \
                 -var='aws_region=${AWS_REGION}' \
                 -var='account_id=${ACCOUNT_ID}' \
-                -var='image_tag=${IMAGE_TAG}' \
+                -var='image_tag=latest}' \
                 -var='instance_type=t2.micro'
             """
           }
