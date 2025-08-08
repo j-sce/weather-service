@@ -4,20 +4,22 @@ set -e
 
 echo "[INFO] Installing Docker "
 dnf update -y
-dnf install -y docker docker-compose-plugin jq
+dnf install -y docker jq
 
 echo "[INFO] Starting Docker..."
 systemctl enable docker
 systemctl start docker
 
-#echo "[INFO] Installing Docker Compose Plugin (v2)..."
+echo "[INFO] Installing Docker Compose standalone"
 #mkdir -p /usr/libexec/docker/cli-plugins/
 #curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 \
 #  -o /usr/libexec/docker/cli-plugins/docker-compose
 #chmod +x /usr/libexec/docker/cli-plugins/docker-compose
+curl -SL https://github.com/docker/compose/releases/download/v2.39.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
 
 echo "[INFO] Verifying Docker Compose plugin..."
-docker compose version || echo "❌ Docker Compose plugin not found"
+docker-compose version || echo "❌ Docker Compose plugin not found"
 
 echo "[INFO] Authenticating with ECR..."
 TOKEN=$(curl -X PUT http://169.254.169.254/latest/api/token \
@@ -69,6 +71,6 @@ EOF
 
 echo "[INFO] Running docker-compose up -d..."
 cd /home/ec2-user
-docker compose up -d
+docker-compose up -d
 
 echo "[INFO] Deployment completed."
