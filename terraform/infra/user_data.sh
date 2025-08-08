@@ -10,6 +10,15 @@ echo "[INFO] Starting Docker..."
 systemctl enable docker
 systemctl start docker
 
+echo "[INFO] Installing Docker Compose Plugin (v2)..."
+mkdir -p ~/.docker/cli-plugins/
+curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 \
+  -o ~/.docker/cli-plugins/docker-compose
+chmod +x ~/.docker/cli-plugins/docker-compose
+
+# Optional: verify
+docker compose version
+
 echo "[INFO] Authenticating with ECR..."
 TOKEN=$(curl -X PUT http://169.254.169.254/latest/api/token \
     -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
@@ -29,8 +38,8 @@ account_id="${account_id}"
 image_tag="${image_tag}"
 repo="${repo}"
 
-echo "[INFO] Installing AWS CLI..."
-dnf install -y awscli
+#echo "[INFO] Installing AWS CLI..."
+#dnf install -y awscli
 
 echo "[INFO] Logging in to ECR..."
 aws ecr get-login-password --region $region | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.$region.amazonaws.com
