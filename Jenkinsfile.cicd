@@ -35,19 +35,29 @@ pipeline {
       }
     }
 
-    stage('Integration Tests') {
+    stage('Run Tests with AWS SSM') {
       steps {
-        sh './gradlew test --tests com.weather_service.testsuites.IntegrationSuite'
+        withCredentials([
+          string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
+          string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
+        ]) {
+          sh '''
+            echo "Testing with AWS credentials..."
+            ./gradlew test --tests com.weather_service.testsuites.IntegrationSuite
+          '''
+        }
       }
       post {
         always {
-          junit 'build/test-results/test/*.xml'
+        junit 'build/test-results/test/*.xml'
         }
         failure {
           echo '❌ Integration tests failed. Check the report.'
         }
       }
     }
+
+
 
 
   }
