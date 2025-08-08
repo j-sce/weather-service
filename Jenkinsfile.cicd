@@ -20,34 +20,35 @@ pipeline {
       }
     }
 
-
-
-    stage('Provision EC2 Infra') {
+    stage('Unit Tests') {
       steps {
-        dir("${TF_INFRA_DIR}") {
-          withCredentials([
-            string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
-            string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
-          ]) {
-            sh """
-              set -e
-              terraform init -input=false
-              terraform validate
-              terraform apply -auto-approve \
-                -var='aws_region=${AWS_REGION}' \
-                -var='account_id=${ACCOUNT_ID}' \
-                -var='image_tag=latest' \
-                -var='instance_type=t2.micro'
-            """
-          }
-        }
+        sh 'chmod +x gradlew'
+        sh './gradlew clean test --tests com.weather_service.testsuites.UnitSuite'
       }
       post {
+        always {
+          junit 'build/test-results/test/*.xml'
+        }
         failure {
-          echo "🚨 EC2 Infra provisioning failed. Check Terraform output."
+          echo '❌ Unit tests failed. Check the test report for details.'
         }
       }
     }
+
+    stage('Integration Tests') {
+      steps {
+        sh './gradlew test --tests com.weather_service.testsuites.IntegrationSuite'
+      }
+      post {
+        always {
+          junit 'build/test-results/test/*.xml'
+        }
+        failure {
+          echo '❌ Integration tests failed. Check the report.'
+        }
+      }
+    }
+
 
   }
 }

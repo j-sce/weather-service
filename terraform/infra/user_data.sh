@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#set -e
-
 echo "[INFO] Installing Docker "
 dnf update -y
 dnf install -y docker jq
