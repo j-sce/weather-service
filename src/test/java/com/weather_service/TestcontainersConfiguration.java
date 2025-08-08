@@ -21,7 +21,6 @@ public class TestcontainersConfiguration {
         redisContainer.start();
     }
 
-
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
         public void initialize(ConfigurableApplicationContext context) {

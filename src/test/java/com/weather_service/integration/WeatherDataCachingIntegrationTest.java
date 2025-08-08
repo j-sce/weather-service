@@ -185,5 +185,4 @@ class WeatherDataCachingIntegrationTest {
         String closestWeatherKey = "weather:" + weatherData1.getLatitude() + ":" + weatherData1.getLongitude();
         assertEquals("weather:54.89178:23.95768", closestWeatherKey);
     }
-
 }

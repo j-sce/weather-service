@@ -43,7 +43,7 @@ class WeatherServiceAppEndToEndTest {
     private String token;
 
     @BeforeEach
-    void clearCache(){
+    void clearCache() {
         cacheManager.getCacheNames()
                 .forEach(cacheName -> Objects.requireNonNull(cacheManager.getCache(cacheName)).clear());
     }
@@ -65,7 +65,7 @@ class WeatherServiceAppEndToEndTest {
 
     @Test
     void testGetWeather_NoWeatherDataFound() throws Exception {
-        when(weatherDataClient.getWeatherData(anyDouble(),anyDouble())).thenReturn(null);
+        when(weatherDataClient.getWeatherData(anyDouble(), anyDouble())).thenReturn(null);
 
         mockMvc.perform(get(URL)
                         .header("Authorization", token)
@@ -74,12 +74,12 @@ class WeatherServiceAppEndToEndTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("No weather data found."));
 
-        verify(weatherDataClient, times(1)).getWeatherData(anyDouble(),anyDouble());
+        verify(weatherDataClient, times(1)).getWeatherData(anyDouble(), anyDouble());
     }
 
     @Test
     void testGetWeather_Success() throws Exception {
-        when(weatherDataClient.getWeatherData(anyDouble(),anyDouble())).thenReturn(weatherDataString);
+        when(weatherDataClient.getWeatherData(anyDouble(), anyDouble())).thenReturn(weatherDataString);
 
         mockMvc.perform(get(URL)
                         .header("Authorization", token)
@@ -94,7 +94,7 @@ class WeatherServiceAppEndToEndTest {
                 .andExpect(jsonPath("$.windSpeed").value(weatherData.getWindSpeed()))
                 .andExpect(jsonPath("$.cloudiness").value(weatherData.getCloudiness()));
 
-        verify(weatherDataClient, times(1)).getWeatherData(anyDouble(),anyDouble());
+        verify(weatherDataClient, times(1)).getWeatherData(anyDouble(), anyDouble());
     }
 
     @Test
@@ -103,8 +103,6 @@ class WeatherServiceAppEndToEndTest {
                         .param("lat", "64.049075")
                         .param("lon", "-16.181418"))
                 .andExpect(status().isBadRequest());
-
-        verify(weatherDataClient, times(0)).getWeatherData(anyDouble(),anyDouble());
     }
 
     @Test

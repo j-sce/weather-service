@@ -43,7 +43,7 @@ class WeatherControllerTest {
     }
 
     @BeforeEach
-    void initializeWeatherData(){
+    void initializeWeatherData() {
         weatherData = new WeatherData();
         weatherData.setLatitude(64.049075);
         weatherData.setLongitude(-16.181418);
