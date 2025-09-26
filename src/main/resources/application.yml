@@ -1,13 +1,13 @@
 spring:
   application:
     name: weather-service
-  config:
-    import: aws-parameterstore:/dev/weather/
-  cloud:
-    aws:
-      parameterstore:
-        enabled: true
-        region: us-east-1
+#  config:
+#    import: aws-parameterstore:/dev/weather/
+#  cloud:
+#    aws:
+#      parameterstore:
+#        enabled: true
+#        region: us-east-1
   cache:
     type: redis
   data:
@@ -22,3 +22,8 @@ weather:
 
 server:
   port: 9090
+
+logging:
+  level:
+    org.springframework.security: INFO
+    org.springframework.web: INFO
