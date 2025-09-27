@@ -41,9 +41,9 @@ public class SecurityConfig {
                                                    @Value("${ui.url}") String uiUrl) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .cors(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
 //                .cors(cors -> cors.configurationSource(corsConfigurationSource(uiUrl)))
-                .cors(cors -> cors.configurationSource(corsConfigSource()))
+//                .cors(cors -> cors.configurationSource(corsConfigSource()))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(WHITELIST_URLS).permitAll()
                                 .anyRequest().authenticated())
@@ -65,15 +65,15 @@ public class SecurityConfig {
 //        return source;
 //    }
 
-    @Bean
-    UrlBasedCorsConfigurationSource corsConfigSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    UrlBasedCorsConfigurationSource corsConfigSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"));
+//        configuration.setAllowCredentials(true);
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }
